@@ -1,0 +1,572 @@
+<!-- # Vars -->
+<!-- Versao -->
+<stringvariable value="1.0.0" variable="sVersao" />
+<!-- Montange pos conversao indice -> Montante -->
+<stringvariable value="0.00" variable="sMontante" />
+<integervariable value="0.00" variable="iMontante" />
+<integervariable value="0" variable="iTaxa" />
+<stringvariable value="0" variable="sTaxa" />
+<integervariable value="0" variable="iValorTotal" />
+<integervariable value="0" variable="iRetornoMenu" />
+<stringvariable value="0" variable="sRetornoMenu" />
+<integervariable value="1" variable="iDownImg" />
+<stringvariable value="0" variable="sDownImg" />
+<stringvariable value="0" variable="sValorTotal" />
+<stringvariable value="0" variable="sURL" />
+
+<stringvariable value="0" variable="sMontanteFormatado" />
+
+<!-- Esta variavel configura a regra de split colocando um JSON como value -->
+<stringvariable value=" " variable=​"sSplit" /> 
+
+
+<!-- Coordenadas do menu -->
+<integervariable value="0" variable="iXaxis" />
+<integervariable value="0" variable="iYaxis" />
+<stringvariable value="0" variable="sXaxis" />
+<stringvariable value="0" variable="sYaxis" />
+<!-- FIM coordenadas do menu -->
+
+<integervariable value="0" variable="iReturn" />
+<stringvariable value="" variable="sMenu" />
+<stringvariable value="" variable="sDateTime" />
+<stringvariable value="" variable="sStatusTransacao" />
+<stringvariable value="" variable="sMenuPage" />
+<integervariable value="0" variable="iI" />
+<integervariable value="0" variable="iItemCount" />
+<integervariable value="0" variable="iCurrentItemIndex" />
+<integervariable value="0" variable="iIndexMenu" />
+
+<stringvariable value="" variable="sKey" />
+
+<integervariable value="0" variable="iMinIndexMenu" />
+<integervariable value="3" variable="iMaxIndexMenu" />
+
+<!-- Download menu -->
+<!-- <downloadfile filename="botoes.bmp" remotepath="botoes.bmp" variablereturn="$(iDownImg)" /> -->
+<inttostring variableinteger="$(iDownImg)" variablestring="$(sDownImg)" />
+
+<!-- # Return Vars -->
+<integervariable value="0" variable="iRet" />
+<integervariable value="0" variable="iRetMenu" />
+
+<!-- Press Ctrl+J to colapse all -->
+<!-- # Main -->
+<callfunction name="fn_main" />
+
+<!-- fn_main -->
+<function name="fn_main">
+    <stringvariable value="     1. R$ 20,00    |     2. R$ 50,00    |     3. R$ 100,00   |     4. R$ 200,00   " variable="sMenu" />
+    <callfunction name="fn_menu" />
+</function>
+
+
+<!-- Confirmacao montante -->
+<function name="fn_converter_indice_montante">
+    <!-- <stringvariable value="0.00" variable="sMontante" /> -->
+    <!-- <stringvariable value="0.00" variable="iMontante" /> -->
+    <!-- O indice vai de 1 - 4 e esta associado a [20, 50, 100, 200] -->
+    <if variable="$(iIndexMenu)" operator="equalto" value="1">
+        <mathematicaloperation variabledestination="$(iMontante)" operator="+" firstvalue="2000" secondvalue="0" />
+        <mathematicaloperation variabledestination="$(iTaxa)" operator="+" firstvalue="200" secondvalue="0" />
+    </if>    
+    <if variable="$(iIndexMenu)" operator="equalto" value="2">
+        <mathematicaloperation variabledestination="$(iMontante)" operator="+" firstvalue="5000" secondvalue="0" />
+        <mathematicaloperation variabledestination="$(iTaxa)" operator="+" firstvalue="500" secondvalue="0" />
+    </if>
+    <if variable="$(iIndexMenu)" operator="equalto" value="3">
+        <mathematicaloperation variabledestination="$(iMontante)" operator="+" firstvalue="10000" secondvalue="0" />
+        <mathematicaloperation variabledestination="$(iTaxa)" operator="+" firstvalue="1000" secondvalue="0" />
+    </if>
+    <if variable="$(iIndexMenu)" operator="equalto" value="4">
+        <mathematicaloperation variabledestination="$(iMontante)" operator="+" firstvalue="20000" secondvalue="0" />
+        <mathematicaloperation variabledestination="$(iTaxa)" operator="+" firstvalue="2000" secondvalue="0" />
+    </if>
+</function>
+
+<!-- Converte uma coordenada para um sKey -->
+<function name="fn_convert_coord">
+	<joinstring firstvalue="KEY_WAIT" secondvalue="" variabledestination="$(sKey)" />
+
+	<if variable="$(iXaxis)" operator="greaterthan" value="59">
+		<if variable="$(iXaxis)" operator="lessthan" value="265">
+			<if variable="$(iYaxis)" operator="greaterthan" value="95">
+				<if variable="$(iYaxis)" operator="lessthan" value="135">
+	                <joinstring firstvalue="KEY_1" secondvalue="" variabledestination="$(sKey)" />
+				</if>
+			</if>
+		</if>
+	</if>
+	<if variable="$(iXaxis)" operator="greaterthan" value="56">
+		<if variable="$(iXaxis)" operator="lessthan" value="262">
+			<if variable="$(iYaxis)" operator="greaterthan" value="170">
+				<if variable="$(iYaxis)" operator="lessthan" value="210">
+	                <joinstring firstvalue="KEY_2" secondvalue="" variabledestination="$(sKey)" />
+				</if>
+			</if>
+		</if>
+	</if>
+	<if variable="$(iXaxis)" operator="greaterthan" value="51">
+		<if variable="$(iXaxis)" operator="lessthan" value="257">
+			<if variable="$(iYaxis)" operator="greaterthan" value="240">
+				<if variable="$(iYaxis)" operator="lessthan" value="280">
+	                <joinstring firstvalue="KEY_3" secondvalue="" variabledestination="$(sKey)" />
+				</if>
+			</if>
+		</if>
+	</if>
+	<if variable="$(iXaxis)" operator="greaterthan" value="50">
+		<if variable="$(iXaxis)" operator="lessthan" value="256">
+			<if variable="$(iYaxis)" operator="greaterthan" value="316">
+				<if variable="$(iYaxis)" operator="lessthan" value="356">
+	                <joinstring firstvalue="KEY_4" secondvalue="" variabledestination="$(sKey)" />
+				</if>
+			</if>
+		</if>
+	</if>
+</function>
+
+<!-- # Menu -->
+<!-- fn_menu -->
+<function name="fn_menu">
+    <integervariable value="0" variable="iRetMenu" />
+    <integervariable value="0" variable="iIndexMenu" />
+    <!-- build the current menu -->
+    <while variable="$(iRetMenu)" operator="equalto" value="0">
+        <if variable="$(iDownImg)" operator="equalto" value="2">
+			<mathematicaloperation variabledestination="$(iDownImg)" operator="+" firstvalue="1" secondvalue="0" />
+		</if>
+        <if variable="$(iDownImg)" operator="equalto" value="1">
+	        <cleandisplay />
+		    <displaybitmap filename="botoes.bmp" variablereturn="$(iRetornoMenu)"/>
+					    
+	        <if variable="$(iRetornoMenu)" operator="equalto" value="1">
+			    <system.gettouchscreenkeyboard axisx="$(iXaxis)" axisy="$(iYaxis)" timeout="12000" variablekey="$(sKey)" variablereturn="$(iReturn)" />
+			    <inttostring variableinteger="$(iXaxis)" variablestring="$(sXaxis)" />
+			    <inttostring variableinteger="$(iYaxis)" variablestring="$(sYaxis)" />
+				<callfunction name="fn_convert_coord">
+			<else>
+	            <mathematicaloperation variabledestination="$(iRetornoMenu)" operator="+" firstvalue="1000" secondvalue="0" />
+			</if>
+		<else>
+	            <mathematicaloperation variabledestination="$(iRetornoMenu)" operator="+" firstvalue="1000" secondvalue="0" />  
+		</if>
+		
+        <if variable="$(iRetornoMenu)" operator="equalto" value="1000">
+		    <callfunction name="fn_menu_header" />
+		    <callfunction name="fn_menu_page" />
+		    <callfunction name="fn_menu_page_display" />
+	        <readkey miliseconds="20000" variablereturn="$(sKey)" />
+		</if>
+
+        <if variable="$(sKey)" operator="equalto" value="KEY_1">
+            <mathematicaloperation variabledestination="$(iIndexMenu)" operator="+" firstvalue="1" secondvalue="0" />  
+        </if>
+        <if variable="$(sKey)" operator="equalto" value="KEY_2">
+            <mathematicaloperation variabledestination="$(iIndexMenu)" operator="+" firstvalue="2" secondvalue="0" />  
+        </if>
+        <if variable="$(sKey)" operator="equalto" value="KEY_3">
+            <mathematicaloperation variabledestination="$(iIndexMenu)" operator="+" firstvalue="3" secondvalue="0" />  
+        </if>
+        <if variable="$(sKey)" operator="equalto" value="KEY_4">
+            <mathematicaloperation variabledestination="$(iIndexMenu)" operator="+" firstvalue="4" secondvalue="0" />  
+        </if>
+
+		<!--
+	    <if variable="$(sKey)" operator="equalto" value="KEY_5">
+            <mathematicaloperation variabledestination="$(iIndexMenu)" operator="+" firstvalue="5" secondvalue="0" />  
+        </if> -->
+
+        <if variable="$(iIndexMenu)" operator="lessthan" value="5">
+            <!--<integervariable value="$(iIndexMenu)" variable="iRetMenu" />-->
+	        <if variable="$(iIndexMenu)" operator="greaterthan" value="0">
+		        <callfunction name="fn_mensagem_confirm" />
+		        <break />
+			</if>
+		</if>
+
+        <!-- CHAVE ENTER  -->
+        <if variable="$(sKey)" operator="equalto" value="KEY_ENTER">
+		    <if variable="$(iIndexMenu)" operator="lessthan" value="5">
+		        <!--<integervariable value="$(iIndexMenu)" variable="iRetMenu" />-->
+			    <if variable="$(iIndexMenu)" operator="greaterthan" value="0">
+				    <callfunction name="fn_mensagem_confirm" />
+				    <break />
+				</if>
+			</if>
+        </if>
+
+        <!-- OPERACAO SOBE -->
+        <if variable="$(sKey)" operator="equalto" value="KEY_EXTRA10">
+            <integeroperator operator="--" variablesource="$(iIndexMenu)" />
+        </if>
+        <if variable="$(sKey)" operator="equalto" value="KEY_EXTRA11">
+            <integeroperator operator="++" variablesource="$(iIndexMenu)" />
+        </if>
+
+        <!-- CHAVE LIMPAR -->
+        <if variable="$(sKey)" operator="equalto" value="KEY_CLEAR">
+            <integervariable value="0" variable="iRetMenu" />
+            <break />
+        </if>
+        <!-- CHAVE CANCELAR -->
+        <if variable="$(sKey)" operator="equalto" value="KEY_CANCEL">
+            <integervariable value="0" variable="iRetMenu" />
+            <break />
+        </if>
+        <!-- RETORNO INVALIDO -->
+        <if variable="$(sKey)" operator="equalto" value="-2">
+            <integervariable value="0" variable="iRetMenu" />
+            <break />
+        </if>
+        <if variable="$(sKey)" operator="equalto" value="KEY_WAIT">
+			<mathematicaloperation variabledestination="$(iRetMenu)" operator="+" firstvalue="0" secondvalue="0" />
+        </if>
+
+    </while>
+</function>
+
+
+<!-- fn_menu_page -->
+<function name="fn_menu_page">
+    <stringvariable value="" variable="sMenuPage" />
+    <stringvariable value="" variable="sItemTemp" />
+    <integervariable value="0" variable="iI" />
+    <integervariable value="1" variable="iItemCount" />
+    <integervariable value="0" variable="iCurrentItemIndex" />
+    <integervariable value="0" variable="iItems" />
+    <!-- set items and pages -->
+    <string.elements string="$(sMenu)" delimiter="|" variablereturn="$(iItems)" />
+    <!-- check and validate the index menu -->
+    <if variable="$(iIndexMenu)" operator="lessthanorequalto" value="0">
+        <integervariable value="1" variable="iIndexMenu" />
+    </if>
+    <if variable="$(iIndexMenu)" operator="greaterthan" value="$(iItems)">
+        <integervariable value="$(iItems)" variable="iIndexMenu" />
+    </if>
+    <while variable="$(iI)" operator="lessthan" value="$(iItems)">
+        <stringvariable value="" variable="sItemTemp" />
+        <!-- Check and read item description -->
+        <string.elementat string="$(sMenu)" element_index="$(iI)" delimiter="|" variablereturn="$(sItemTemp)" />
+        <integervariable value="0" variable="iCurrentItemIndex" />
+        <mathematicaloperation variabledestination="$(iCurrentItemIndex)" operator="+" firstvalue="$(iI)" secondvalue="1" />
+        <!-- Check the item cursor -->
+        <if variable="$(iIndexMenu)" operator="equalto" value="$(iCurrentItemIndex)">
+            <if variable="$(sMenuPage)" operator="equalto" value="">
+                <integervariable value="0" variable="iLen" />
+                <string.length value="$(sItemTemp)" variablereturn="$(iLen)" />
+                <if variable="$(iLen)" operator="greaterthan" value="19">
+                    <string.substring string="$(sItemTemp)" start="0" length="19" variablereturn="$(sItemTemp)" />
+                </if>
+                <stringvariable value="$(sItemTemp)" variable="sMenuPage" />
+                <joinstring firstvalue="$(sMenuPage)" secondvalue='&lt;&lt;' variabledestination="$(sMenuPage)" />
+                <joinstring firstvalue="$(sMenuPage)" secondvalue='&lt;&lt;' variabledestination="$(sMenuPage)" />
+                <else />
+                <integervariable value="0" variable="iLen" />
+                <string.length value="$(sItemTemp)" variablereturn="$(iLen)" />
+                <if variable="$(iLen)" operator="greaterthan" value="19">
+                    <string.substring string="$(sItemTemp)" start="0" length="19" variablereturn="$(sItemTemp)" />
+                </if>
+                <joinstring firstvalue="$(sMenuPage)" secondvalue="|"            variabledestination="$(sMenuPage)" />
+                <joinstring firstvalue="$(sMenuPage)" secondvalue="$(sItemTemp)" variabledestination="$(sMenuPage)" />
+                <joinstring firstvalue="$(sMenuPage)" secondvalue='&lt;&lt;'     variabledestination="$(sMenuPage)" />
+                <joinstring firstvalue="$(sMenuPage)" secondvalue='&lt;&lt;' variabledestination="$(sMenuPage)" />
+            </if>
+            <else />
+            <if variable="$(sMenuPage)" operator="equalto" value="">
+                <stringvariable value="$(sItemTemp)" variable="sMenuPage" />
+                <else />
+                <joinstring firstvalue="$(sMenuPage)" secondvalue="|"            variabledestination="$(sMenuPage)" />
+                <joinstring firstvalue="$(sMenuPage)" secondvalue="$(sItemTemp)" variabledestination="$(sMenuPage)" />
+            </if>
+        </if>
+        <!-- Check if we are in the correct page and exit -->
+        <if variable="$(iItemCount)" operator="equalto" value="4">
+            <if variable="$(iIndexMenu)" operator="lessthanorequalto" value="$(iCurrentItemIndex)">
+                <break />
+                <else />
+                <stringvariable value="" variable="sMenuPage" />
+                <integervariable value="1" variable="iItemCount" />
+            </if>
+            <else />
+            <integeroperator operator="++" variablesource="$(iItemCount)" />
+        </if>
+        <integeroperator operator="++" variablesource="$(iI)" />
+    </while>
+</function>
+
+
+<!-- fn_menu_page_display -->
+<function name="fn_menu_header">
+    <cleandisplay />
+    <display column="5" line="4" message="SAQUE SEMPRE" />
+</function>
+
+
+<!-- fn_menu_page_display -->
+<function name="fn_menu_page_display">
+    <integervariable value="0" variable="iItems" />
+    <integervariable value="0" variable="iI" />
+    <integervariable value="0" variable="iLine" />
+    <integervariable value="0" variable="iLineTMP" />
+    <!-- Posicao horizontal na qual comeca os items do menu-->
+    <integervariable value="4" variable="iPosicaoHeader" />
+
+    <stringvariable value="" variable="sRet" />
+    <cleandisplay />
+
+    <string.elements string="$(sMenuPage)" delimiter="|" variablereturn="$(iItems)" />
+    <!-- <display column="5" line="$(iPosicaoHeader)" message="SAQUE SEMPRE" /> -->
+    <displaybitmap filename="logo.bmp" variablereturn="$(iReturn)"/>
+
+    <mathematicaloperation variabledestination="$(iPosicaoHeader)" operator="+" firstvalue="$(iPosicaoHeader)" secondvalue="2" />
+    <display column="5" line="$(iPosicaoHeader)" message="Selecione o valor do saque:" />
+    <mathematicaloperation variabledestination="$(iPosicaoHeader)" operator="+" firstvalue="$(iPosicaoHeader)" secondvalue="4" />
+
+    <stringvariable value="" variable="sItems"/>
+    <!-- Convert to String -->
+    <inttostring variableinteger="$(iItems)" variablestring="$(sItems)"/>
+
+    <if variable="$(sMenuPage)" operator="notequalto" value="">
+        <string.elements string="$(sMenuPage)" delimiter="|" variablereturn="$(iItems)" />
+        <while variable="$(iI)" operator="lessthan" value="$(iItems)">
+            <string.elementat string="$(sMenuPage)" element_index="$(iI)" delimiter="|" variablereturn="$(sRet)" />
+            <mathematicaloperation variabledestination="$(iLineTMP)" operator="+" firstvalue="$(iLine)" secondvalue="$(iPosicaoHeader)" />
+            <display line="$(iLineTMP)" column="0" message="$(sRet)" />
+            <mathematicaloperation variabledestination="$(iLine)" operator="+" firstvalue="$(iLine)" secondvalue="2" />
+            <integeroperator operator="++" variablesource="$(iI)" />
+        </while>
+    </if>
+
+    <mathematicaloperation variabledestination="$(iLine)" operator="+" firstvalue="$(iLineTMP)" secondvalue="2" />
+
+    <display line="$(iLine)" column="0" message="" />
+    <integeroperator operator="++" variablesource="$(iLine)" />
+    <display line="$(iLine)" column="0" message="" />
+    <integeroperator operator="++" variablesource="$(iLine)" />
+
+    <mathematicaloperation variabledestination="$(iLine)" operator="+" firstvalue="$(iLine)" secondvalue="4" />
+    <display line="$(iLine)" column="0" message="          SaqueSempre.com.br" />
+
+</function>
+
+<!-- Confirmacao montante -->
+<function name="fn_mensagem_confirm">
+    <stringvariable value="0" variable="sReturn" />
+
+    <stringvariable value="0" variable="sKey" />
+
+    <stringvariable value="0" variable="sValorTotalTransac" />
+    <integervariable value="0" variable="iLenMontante" />
+    <integervariable value="0" variable="iSep" />
+
+    <integervariable value="0" variable="iOpEsq" />
+    <integervariable value="0" variable="iOpDir" />
+    <integervariable value="0" variable="iOpSoma" />
+
+    <stringvariable value="0" variable="sIndexMenu" />
+    <stringvariable value="0" variable="sMontanteTMP" />
+    <stringvariable value="0" variable="sTaxaTMP" />
+    <inttostring variableinteger="$(iIndexMenu)" variablestring="$(sIndexMenu)" />
+    <cleandisplay />
+
+    <callfunction name="fn_converter_indice_montante" />
+    <inttostring variableinteger="$(iMontante)" variablestring="$(sMontanteTMP)" />
+    <inttostring variableinteger="$(iMontante)" variablestring="$(sMontante)" />
+
+    <joinstring firstvalue="$(sMontanteTMP)" secondvalue="" variabledestination="$(sMontanteFormatado)" />
+    <callfunction name="fn_formatar_montante" />
+    <joinstring firstvalue="$(sMontanteFormatado)" secondvalue="" variabledestination="$(sMontanteTMP)" />
+
+    <inttostring variableinteger="$(iTaxa)" variablestring="$(sTaxa)" />
+
+    <stringtoint variableinteger="$(iOpEsq)" variablestring="$(sMontante)" />
+    <stringtoint variableinteger="$(iOpDir)" variablestring="$(sTaxa)" />
+
+    <joinstring firstvalue="$(sTaxa)" secondvalue="" variabledestination="$(sMontanteFormatado)" />
+    <callfunction name="fn_formatar_montante" />
+    <joinstring firstvalue="$(sMontanteFormatado)" secondvalue="" variabledestination="$(sTaxa)" />
+
+    <mathematicaloperation variabledestination="$(iValorTotal)" operator="+" firstvalue="$(iOpEsq)" secondvalue="$(iOpDir)" />
+    <inttostring variableinteger="$(iValorTotal)" variablestring="$(sValorTotal)" />
+
+    <cleandisplay>
+    <stringtoint variableinteger="$(iTaxa)" variablestring="$(sTaxa)" />
+    <stringtoint variableinteger="$(iMontante)" variablestring="$(sMontante)" />
+
+    <joinstring firstvalue="$(sValorTotal)" secondvalue="" variabledestination="$(sValorTotalTransac)" />
+
+    <joinstring firstvalue="$(sValorTotal)" secondvalue="" variabledestination="$(sMontanteFormatado)" />
+
+    <callfunction name="construir_registro_split">
+    <editfile filename="cw_metadata.dat" key="split_rules" value="$(sSplit)" />
+
+    <callfunction name="fn_formatar_montante" />
+    <joinstring firstvalue="$(sMontanteFormatado)" secondvalue="" variabledestination="$(sValorTotal)" />
+
+    <string.insertat delimiter=" " string="$(sMontanteTMP)" element_index="0" string_to_be_inserted='R$' 
+    variablereturn="$(sMontanteTMP)" />
+    <string.insertat delimiter=" " string="$(sValorTotal)" element_index="0" string_to_be_inserted='R$'
+    variablereturn="$(sValorTotal)" />
+    <string.insertat delimiter=" " string="$(sTaxa)" element_index="1" string_to_be_inserted='R$' 
+    variablereturn="$(sTaxa)" />
+
+    <callfunction name="fn_menu_header">
+    <displaybitmap filename="logo.bmp" variablereturn="$(iReturn)"/>
+
+    <display column="5" line="7" message="Valor do Saque:" />
+    <display column="5" line="8" message="$(sMontanteTMP)" />
+    <display column="5" line="10" message="Taxa de conveniência:" />
+    <display column="5" line="11" message="$(sTaxa)" />
+    <display column="5" line="13" message="-----------------------" />
+    <display column="5" line="15" message="TOTAL: " />
+    <display column="5" line="17" message="$(sValorTotal)" />
+
+    <mathematicaloperation variabledestination="$(iOpEsq)" operator="+" firstvalue="0" secondvalue="0" />
+    <mathematicaloperation variabledestination="$(iOpDir)" operator="+" firstvalue="0" secondvalue="0" />
+    <mathematicaloperation variabledestination="$(iOpSoma)" operator="+" firstvalue="0" secondvalue="0" />
+
+    <while variable="$(iOpSoma)" operator="equalto" value="0">
+        <readkey miliseconds="16000" variablereturn="$(sKey)" />
+
+        <if variable="$(sKey)" operator="equalto" value="KEY_ENTER">
+            <mathematicaloperation variabledestination="$(iOpEsq)" operator="+" firstvalue="1" secondvalue="0" />
+        </if>
+        <if variable="$(sKey)" operator="equalto" value="KEY_CANCEL">
+            <mathematicaloperation variabledestination="$(iOpDir)" operator="+" firstvalue="1" secondvalue="0" />
+        </if>
+        <mathematicaloperation variabledestination="$(iOpSoma)" operator="+" firstvalue="$(iOpEsq)" secondvalue="$(iOpDir)" />
+    </while>
+
+    <if variable="$(sKey)" operator="equalto" value="KEY_ENTER">
+        <editfile filename="cw_emv_payment.dat" key="paAmount" value="$(sValorTotalTransac)" />
+        <editfile filename="cw_emv_payment.dat" key="paValue" value="$(sValorTotalTransac)" />
+        <!--<system.readcard cardvariable="$(sReturn)" keyvariable="$(sKey)" timeout="10000" variablereturn="$(iReturn)"  /> -->
+        <execute filename="blockapptyperead.posxml" />
+    <else>
+        <if variable="$(sKey)" operator="equalto" value="KEY_CANCEL">
+            <cleandisplay>
+            <callfunction name="fn_menu_header">
+            <displaybitmap filename="logo.bmp" variablereturn="$(iReturn)"/>
+            <display column="5" line="10" message="    OPERAÇÃO CANCELADA!" />
+            <wait miliseconds="5000" />        
+            <exit/>
+        </if>
+    </if>
+
+</function>
+
+<!-- Limpando dados do montante -->
+<function name="fn_limpar_dados_transacionais">
+    <editfile filename="cw_emv_callback.dat" key="amount" value=" " />
+    <editfile filename="cw_emv_callback.dat" key="status" value=" " />
+    <editfile filename="cw_emv_callback.dat" key="auth_code" value=" " />
+    <editfile filename="cw_emv_callback.dat" key="payment_type" value=" " />
+    <editfile filename="cw_emv_callback.dat" key="date" value=" " />
+    <editfile filename="cw_emv_callback.dat" key="paAmount" value=" " />
+    <editfile filename="cw_emv_callback.dat" key="paValue" value=" " />
+    <wait miliseconds="200" />
+</function>
+
+
+<function name="fn_emitir_nota">
+    <stringvariable value="0" variable="sTransactionStatus" />
+    <readfile filename="cw_emv_callback.dat" key="status" variabledestination="$(sTransactionStatus)" />
+    <if variable="$(sTransactionStatus)" operator="equalto" value="APPROVED">
+        <print message="    SAQUE SEMPRE" />
+        <paperfeed/>
+        <paperfeed/>
+        <print message="Operação de saque" />
+        <print message="$(sValorTotal)" />
+        <paperfeed/>
+        <paperfeed/>
+        <paperfeed/>
+        <paperfeed/>
+        <paperfeed/>
+        <waitkey />
+    </if>
+    <callfunction name="fn_limpar_dados_transacionais">
+</function>
+
+
+<function name="fn_formatar_montante">
+    <integervariable value="0" variable="iLenLabelMontante" />
+
+    <stringvariable value="0" variable="sLabelReal" />
+    <stringvariable value="0" variable="sLabelCentavos" />
+
+    <cleandisplay>
+
+    <string.length value="$(sMontanteFormatado)" variablereturn="$(iLenLabelMontante)" />
+
+    <if variable="$(iLenLabelMontante)" operator="equalto" value="4">
+        <string.substring length="2" start="0" string="$(sMontanteFormatado)" variablereturn="$(sLabelReal)" />
+        <string.substring length="2" start="2" string="$(sMontanteFormatado)" variablereturn="$(sLabelCentavos)" />
+    <else>
+        <if variable="$(iLenLabelMontante)" operator="equalto" value="5">
+            <string.substring length="3" start="0" string="$(sMontanteFormatado)" variablereturn="$(sLabelReal)" />
+            <string.substring length="2" start="3" string="$(sMontanteFormatado)" variablereturn="$(sLabelCentavos)" />
+        <else>
+            <if variable="$(iLenLabelMontante)" operator="equalto" value="2">
+                <joinstring firstvalue="0" secondvalue="" variabledestination="$(sLabelReal)" />
+                <string.substring length="2" start="0" string="$(sMontanteFormatado)" variablereturn="$(sLabelCentavos)" />
+            <else>
+                <string.substring length="1" start="0" string="$(sMontanteFormatado)" variablereturn="$(sLabelReal)" />
+                <string.substring length="2" start="1" string="$(sMontanteFormatado)" variablereturn="$(sLabelCentavos)" />
+            </if>
+        </if>
+    </if>
+
+    <joinstring firstvalue="$(sLabelReal)" secondvalue="," variabledestination="$(sMontanteFormatado)" />
+    <joinstring firstvalue="$(sMontanteFormatado)" secondvalue="$(sLabelCentavos)" variabledestination="$(sMontanteFormatado)" />
+
+</function>
+
+<!-- Constroi o JSON que parametriza como será realizada a tarefa do split de pagamento -->
+<function name="construir_registro_split">
+    <if variable="$(sValorTotal)" operator="equalto" value="230">
+        <stringvariable value='"split_payment":[{"amount":AMOUNT_VALUE1,"account_id":"acc1X1CEQ3M00AD4","chargeabl
+    e":false}, {"amount":AMOUNT_VALUE2,"account_id":"acc1XXFXVK5G0BDC","chargeable":true}]' variable="sPadraoJsonSplit" />
+        <string.replace new_substring="13" old_substring="AMOUNT_VALUE1" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sPadraoJsonSplit)" />
+        <string.replace new_substring="217" old_substring="AMOUNT_VALUE2" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sSplit)" />
+    </if>
+
+    <if variable="$(sValorTotal)" operator="equalto" value="2240">
+        <stringvariable value='"split_payment":[{"amount":AMOUNT_VALUE1,"account_id":"acc1XXFXVK5G0BDC","chargeabl
+    e":true}, {"amount":AMOUNT_VALUE2,"account_id":"acc1X1CEQ3M00AD4","chargeable":false}]' variable="sPadraoJsonSplit" />
+        <string.replace new_substring="224" old_substring="AMOUNT_VALUE1" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sPadraoJsonSplit)" />
+        <string.replace new_substring="2016" old_substring="AMOUNT_VALUE2" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sSplit)" />
+    </if>
+
+    <if variable="$(sValorTotal)" operator="equalto" value="5600">
+        <stringvariable value='"split_payment":[{"amount":AMOUNT_VALUE1,"account_id":"acc1XXFXVK5G0BDC","chargeabl
+    e":true}, {"amount":AMOUNT_VALUE2,"account_id":"acc1X1CEQ3M00AD4","chargeable":false}]' variable="sPadraoJsonSplit" />
+        <string.replace new_substring="560" old_substring="AMOUNT_VALUE1" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sPadraoJsonSplit)" />
+        <string.replace new_substring="5040" old_substring="AMOUNT_VALUE2" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sSplit)" />
+    </if>
+
+    <if variable="$(sValorTotal)" operator="equalto" value="11200">
+        <stringvariable value='"split_payment":[{"amount":AMOUNT_VALUE1,"account_id":"acc1XXFXVK5G0BDC","chargeabl
+    e":true}, {"amount":AMOUNT_VALUE2,"account_id":"acc1X1CEQ3M00AD4","chargeable":false}]' variable="sPadraoJsonSplit" />
+        <string.replace new_substring="1120" old_substring="AMOUNT_VALUE1" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sPadraoJsonSplit)" />
+        <string.replace new_substring="10080" old_substring="AMOUNT_VALUE2" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sSplit)" />
+    </if>    
+
+    <if variable="$(sValorTotal)" operator="equalto" value="22400">
+        <stringvariable value='"split_payment":[{"amount":AMOUNT_VALUE1,"account_id":"acc1XXFXVK5G0BDC","chargeabl
+    e":true}, {"amount":AMOUNT_VALUE2,"account_id":"acc1X1CEQ3M00AD4","chargeable":false}]' variable="sPadraoJsonSplit" />
+        <string.replace new_substring="2240" old_substring="AMOUNT_VALUE1" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sPadraoJsonSplit)" />
+        <string.replace new_substring="20160" old_substring="AMOUNT_VALUE2" original_string="$(sPadraoJsonSplit)" 
+        variablereturn="$(sSplit)" />
+    </if>
+
+</function>
